@@ -133,13 +133,13 @@ test('gets contract address (CREATE2)', () => {
 
 test('https://github.com/wevm/viem/issues/1964', async () => {
   const { contractAddress, factoryAddress } = await deployERC20()
-  const calldata = encodeDeployData({
+  const bytecode = encodeDeployData({
     abi: ERC20.abi,
     bytecode: ERC20.bytecode.object,
     args: ['Bored Ape Wagmi Club', 'BAYC', 8],
   })
   const addr = getContractAddress({
-    bytecodeHash: keccak256(calldata),
+    bytecode,
     from: factoryAddress!,
     salt: toHex('hello world', { size: 32 }),
     opcode: 'CREATE2',

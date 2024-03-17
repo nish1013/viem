@@ -245,7 +245,7 @@ export async function deployERC20() {
     account: accounts[0].address,
   })
 
-  const calldata = encodeDeployData({
+  const bytecode = encodeDeployData({
     abi: ERC20.abi,
     bytecode: ERC20.bytecode.object,
     args: ['Bored Ape Wagmi Club', 'BAYC', 8],
@@ -255,7 +255,7 @@ export async function deployERC20() {
     account: accounts[0].address,
     address: contractAddress,
     functionName: 'deploy',
-    args: [0n, toHex('hello world', { size: 32 }), calldata],
+    args: [0n, toHex('hello world', { size: 32 }), bytecode],
   })
   await writeContract(walletClient, request)
 
