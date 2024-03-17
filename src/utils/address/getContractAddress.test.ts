@@ -3,7 +3,14 @@ import { expect, test } from 'vitest'
 import { toBytes } from '../encoding/toBytes.js'
 import { toHex } from '../encoding/toHex.js'
 
-import { encodeAbiParameters, keccak256, parseAbiParameters } from '../index.js'
+import { ERC20 } from '../../../test/contracts/generated.js'
+import { deployERC20 } from '../../../test/src/utils.js'
+import {
+  encodeAbiParameters,
+  encodeDeployData,
+  keccak256,
+  parseAbiParameters,
+} from '../index.js'
 import {
   getContractAddress,
   getCreate2Address,
@@ -122,4 +129,20 @@ test('gets contract address (CREATE2)', () => {
       opcode: 'CREATE2',
     }),
   ).toMatchInlineSnapshot('"0x98F06eF857728F5a10e9968b881739bf9638300A"')
+})
+
+test('https://github.com/wevm/viem/issues/1964', async () => {
+  const { contractAddress, factoryAddress } = await deployERC20()
+  const calldata = encodeDeployData({
+    abi: ERC20.abi,
+    bytecode: ERC20.bytecode.object,
+    args: ['Bored Ape Wagmi Club', 'BAYC', 8],
+  })
+  const addr = getContractAddress({
+    bytecodeHash: keccak256(calldata),
+    from: factoryAddress!,
+    salt: toHex('hello world', { size: 32 }),
+    opcode: 'CREATE2',
+  })
+  expect(addr).toEqual(contractAddress)
 })

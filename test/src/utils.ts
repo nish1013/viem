@@ -28,7 +28,11 @@ import { getHttpRpcClient } from '~viem/utils/rpc/http.js'
 
 import { type RequestListener, createServer } from 'http'
 import type { AddressInfo } from 'net'
+import { simulateContract } from '../../src/actions/public/simulateContract.js'
+import { encodeDeployData, toHex } from '../../src/index.js'
 import {
+  Create2,
+  ERC20,
   ERC20InvalidTransferEvent,
   EnsAvatarTokenUri,
   ErrorsExample,
@@ -232,6 +236,30 @@ export async function deployBAYC() {
     args: ['Bored Ape Wagmi Club', 'BAYC', 69420n, 0n],
     account: accounts[0].address,
   })
+}
+
+export async function deployERC20() {
+  const { contractAddress } = await deploy({
+    abi: Create2.abi,
+    bytecode: Create2.bytecode.object,
+    account: accounts[0].address,
+  })
+
+  const calldata = encodeDeployData({
+    abi: ERC20.abi,
+    bytecode: ERC20.bytecode.object,
+    args: ['Bored Ape Wagmi Club', 'BAYC', 8],
+  })
+  const { request, result } = await simulateContract(walletClient, {
+    abi: Create2.abi,
+    account: accounts[0].address,
+    address: contractAddress,
+    functionName: 'deploy',
+    args: [0n, toHex('hello world', { size: 32 }), calldata],
+  })
+  await writeContract(walletClient, request)
+
+  return { factoryAddress: contractAddress, contractAddress: result }
 }
 
 export async function deployErrorExample() {
