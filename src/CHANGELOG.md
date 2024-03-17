@@ -1,5 +1,13 @@
 # viem
 
+## 2.8.11
+
+### Patch Changes
+
+- [#1969](https://github.com/wevm/viem/pull/1969) [`b6f591633697008d90a0fafa34873076982a5d61`](https://github.com/wevm/viem/commit/b6f591633697008d90a0fafa34873076982a5d61) Thanks [@jxom](https://github.com/jxom)! - Support `exactOptionalPropertyTypes`.
+
+- [#1966](https://github.com/wevm/viem/pull/1966) [`a215b6fffa81033be9ad705b53360f445630b595`](https://github.com/wevm/viem/commit/a215b6fffa81033be9ad705b53360f445630b595) Thanks [@YamenMerhi](https://github.com/YamenMerhi)! - Added LUKSO Testnet
+
 ## 2.8.10
 
 ### Patch Changes
